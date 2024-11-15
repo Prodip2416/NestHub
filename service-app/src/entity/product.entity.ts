@@ -13,6 +13,6 @@ export class Product {
   })
   description: string;
 
-  @Column('decimal')
+  @Column('float')
   price: number;
 }

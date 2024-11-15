@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Product } from './product.entity';
+import { Product } from '../entity/product.entity';
 
 @Injectable()
 export class ProductsService {
@@ -25,6 +25,7 @@ export class ProductsService {
   }
 
   async create(productData: Partial<Product>): Promise<Product> {
+    console.log(productData);
     const product = this.productsRepository.create(productData);
     return this.productsRepository.save(product);
   }

@@ -3,8 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ProductsModule } from './product/products.module';
 import { join } from 'path';
+import { ProductsModule } from './modules/product/products.module';
 
 @Module({
   imports: [

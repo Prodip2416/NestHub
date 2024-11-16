@@ -8,7 +8,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { Product } from '../entity/product.entity';
+import { CreateProductDTO, UpdateProductDTO } from './dto/product.dto';
+import { Product } from './entities/product.entity';
 
 @Controller('products')
 export class ProductsController {
@@ -25,16 +26,13 @@ export class ProductsController {
   }
 
   @Post()
-  create(@Body() productData: Partial<Product>): Promise<Product> {
-    return this.productsService.create(productData);
+  create(@Body() createProductDto: CreateProductDTO) {
+    return this.productsService.create(createProductDto);
   }
 
   @Put(':id')
-  update(
-    @Param('id') id: number,
-    @Body() productData: Partial<Product>,
-  ): Promise<Product> {
-    return this.productsService.update(id, productData);
+  update(@Param('id') id: number, @Body() updateProductDto: UpdateProductDTO) {
+    return this.productsService.update(id, updateProductDto);
   }
 
   @Delete(':id')

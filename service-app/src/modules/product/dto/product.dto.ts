@@ -28,4 +28,6 @@ export class UpdateProductDTO {
 export class ResponseDto<T> {
   message: string;
   data: T;
+  totalCount?: number;
+  totalPages?: number;
 }

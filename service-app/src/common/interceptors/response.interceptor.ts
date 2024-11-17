@@ -13,10 +13,18 @@ import {
       return next.handle().pipe(
         map((data) => {
           const statusCode = context.switchToHttp().getResponse().statusCode;
-  
+          // Check if the response already contains the desired structure
+          if (data?.pagination) {
+            return {
+              statusCode,
+              message: data.message || 'Operation successful',
+              data: data.data,
+              ...data.pagination,
+            };
+          }
           return {
               statusCode,
-              message: data?.message || 'Data added successfully',
+              message: data?.message || 'Operation successful',
               data: data?.data || data, // Wrap controller response
           };
         }),

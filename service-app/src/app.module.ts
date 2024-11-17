@@ -21,6 +21,7 @@ import { ProductsModule } from './modules/product/products.module';
       synchronize: true,
       autoLoadEntities: true,
       entities: [join(__dirname, '/**/*.entity{.ts,.js}')],
+      // logging: ['query'],
     }),
     ProductsModule,
   ],

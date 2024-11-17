@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateProductDTO, UpdateProductDTO } from './dto/product.dto';
 import { Product } from './entities/product.entity';
+import { ProductQueryDto } from './dto/productQuery.dto';
 
 @Injectable()
 export class ProductsService {
@@ -11,8 +12,34 @@ export class ProductsService {
     private productsRepository: Repository<Product>,
   ) {}
 
-  async findAll(): Promise<Product[]> {
-    return this.productsRepository.find();
+  async findAll(query: ProductQueryDto): Promise<{ data: Product[]; total: number }> {
+    const { limit, page, search, sortField, sortOrder } = query;
+    const skip = (page - 1) * limit;
+
+    const qb = this.productsRepository.createQueryBuilder('product');
+
+    // Apply search filter
+    if (search) {
+      qb.where(
+        'LOWER(product.name) LIKE :search OR LOWER(product.description) LIKE :search',
+        { search: `%${search.toLowerCase()}%` },
+      );
+    }
+
+    // Apply sorting and order by
+    if (sortOrder) {
+      qb.orderBy(`product.id`, sortOrder || 'DESC');
+    }
+   
+    if(page && limit){
+      // Apply pagination
+      qb.skip(skip).take(limit);
+    }
+    
+    // Execute query and count total
+    const [data, total] = await qb.getManyAndCount();
+
+    return { data, total };
   }
 
   async findOne(id: number): Promise<Product> {

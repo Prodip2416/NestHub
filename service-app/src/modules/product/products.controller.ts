@@ -9,10 +9,13 @@ import {
   HttpStatus,
   HttpCode,
   NotFoundException,
+  Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDTO, ResponseDto, UpdateProductDTO } from './dto/product.dto';
 import { Product } from './entities/product.entity';
+import { ProductQueryDto } from './dto/productQuery.dto';
+import { PaginatedResponse } from 'src/common/interfaces/PaginatedResponse.interface';
 
 @Controller('products')
 export class ProductsController {
@@ -20,11 +23,17 @@ export class ProductsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAll(): Promise<ResponseDto<Product[]>> { 
-    const products = await this.productsService.findAll();
+  async findAll(@Query() query: ProductQueryDto): Promise<PaginatedResponse<Product>> {
+    const { data, total } = await this.productsService.findAll(query);
+
     return {
       message: 'Products fetched successfully',
-      data: products,
+      data,
+      pagination: {
+        total,
+        page: query.page,
+        limit: query.limit,
+      },
     };
   }
 

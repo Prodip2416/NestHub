@@ -6,9 +6,12 @@ import {
   Param,
   Put,
   Delete,
+  HttpStatus,
+  HttpCode,
+  NotFoundException,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { CreateProductDTO, UpdateProductDTO } from './dto/product.dto';
+import { CreateProductDTO, ResponseDto, UpdateProductDTO } from './dto/product.dto';
 import { Product } from './entities/product.entity';
 
 @Controller('products')
@@ -16,27 +19,56 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
-  findAll(): Promise<Product[]> {
-    return this.productsService.findAll();
+  @HttpCode(HttpStatus.OK)
+  async findAll(): Promise<ResponseDto<Product[]>> { 
+    const products = await this.productsService.findAll();
+    return {
+      message: 'Products fetched successfully',
+      data: products,
+    };
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number): Promise<Product> {
-    return this.productsService.findOne(id);
+  @HttpCode(HttpStatus.OK)
+  async findOne(@Param('id') id: number): Promise<ResponseDto<Product>> {
+    const product = await this.productsService.findOne(id);
+    return {
+      message: 'Product fetched successfully',
+      data: product,
+    };
   }
 
   @Post()
-  create(@Body() createProductDto: CreateProductDTO) {
-    return this.productsService.create(createProductDto);
+  @HttpCode(HttpStatus.CREATED) 
+  async create(@Body() createProductDto: CreateProductDTO) {
+    const createdProduct = await this.productsService.create(createProductDto);
+    return {
+      message: 'Product created successfully',
+      data: createdProduct,
+    };
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() updateProductDto: UpdateProductDTO) {
-    return this.productsService.update(id, updateProductDto);
+  @HttpCode(HttpStatus.OK) 
+  async update(@Param('id') id: number, @Body() updateProductDto: UpdateProductDTO) {
+    const updateProduct = await this.productsService.update(id, updateProductDto);
+    return {
+      message: 'Product update successfully',
+      data: updateProduct,
+    };
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number): Promise<void> {
-    return this.productsService.remove(id);
+  @HttpCode(HttpStatus.OK)  
+  async delete(@Param('id') id: number): Promise<any> {
+    const product = await this.productsService.findOne(id);
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+    await this.productsService.remove(id);
+    return {
+      message: 'Product deleted successfully',
+    };
   }
+
 }

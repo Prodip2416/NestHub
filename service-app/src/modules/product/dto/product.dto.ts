@@ -25,3 +25,7 @@ export class UpdateProductDTO {
   @IsString()
   description?: string;
 }
+export class ResponseDto<T> {
+  message: string;
+  data: T;
+}

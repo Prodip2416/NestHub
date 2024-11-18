@@ -5,6 +5,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { join } from 'path';
 import { ProductsModule } from './modules/product/products.module';
+import { CustomTypeOrmLogger } from './common/middlewares/CustomTypeOrmLogger.middleware';
+import { APP_FILTER } from '@nestjs/core';
+import { GlobalExceptionFilter } from './common/filters/GlobalException.filter';
+
 
 @Module({
   imports: [
@@ -22,10 +26,12 @@ import { ProductsModule } from './modules/product/products.module';
       autoLoadEntities: true,
       entities: [join(__dirname, '/**/*.entity{.ts,.js}')],
       // logging: ['query'],
+      // logging: true,
+      // logger: new CustomTypeOrmLogger(),
     }),
     ProductsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [ AppService],
 })
 export class AppModule {}

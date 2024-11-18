@@ -10,6 +10,7 @@ import {
   HttpCode,
   NotFoundException,
   Query,
+  HttpException,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDTO, ResponseDto, UpdateProductDTO } from './dto/product.dto';
@@ -20,6 +21,17 @@ import { PaginatedResponse } from 'src/common/interfaces/PaginatedResponse.inter
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
+
+  @Get('error')
+  throwError() {
+    throw new HttpException(
+      {
+        status: HttpStatus.BAD_REQUEST,
+        error: 'custom error message',
+      },
+      HttpStatus.BAD_REQUEST,
+    );
+  }
 
   @Get()
   @HttpCode(HttpStatus.OK)

@@ -37,6 +37,7 @@ export class ProductsController {
   }
 
   @Get()
+  
   @HttpCode(HttpStatus.OK)
   async findAll(@Query() query: ProductQueryDto): Promise<PaginatedResponse<Product>> {
     const { data, total } = await this.productsService.findAll(query);
@@ -53,6 +54,7 @@ export class ProductsController {
   }
 
   @Get(':id')
+ 
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id') id: number): Promise<ResponseDto<Product>> {
     const product = await this.productsService.findOne(id);

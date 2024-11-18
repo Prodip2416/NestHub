@@ -6,10 +6,7 @@ import { Product } from './entities/product.entity';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Product]),  JwtModule.register({
-    secret: 'yourSecretKey',  // Use environment variables in production
-    signOptions: { expiresIn: '1h' },  // Set token expiration time
-  }),],
+  imports: [TypeOrmModule.forFeature([Product])],
   providers: [ProductsService],
   controllers: [ProductsController],
   exports: [ProductsService],

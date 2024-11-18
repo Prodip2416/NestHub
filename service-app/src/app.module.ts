@@ -36,7 +36,8 @@ import { JwtModule } from '@nestjs/jwt';
     AuthModule,
     JwtModule.register({
       secret: 'yourSecretKey',  // Use an environment variable in production
-      signOptions: { expiresIn: '1h' },  // Set token expiration time
+      signOptions: { expiresIn: '1h' }, 
+      global: true // Set token expiration time
     }),
   ],
   controllers: [AppController],

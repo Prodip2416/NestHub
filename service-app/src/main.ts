@@ -1,10 +1,11 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { CustomValidationPipe } from './common/pipes/CustomValidationPipe';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { MyLogger } from './common/middlewares/Logger.middleware';
 import { GlobalExceptionFilter } from './common/filters/GlobalException.filter';
+import { JwtAuthGuard } from './modules/auth/strategies/AuthGuard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

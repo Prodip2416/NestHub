@@ -8,6 +8,8 @@ import { GlobalExceptionFilter } from './common/filters/GlobalException.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // Enable CORS with default settings
+  app.enableCors();
   // app.useGlobalPipes(
   //   new ValidationPipe({
   //     whitelist: true, // Remove properties not defined in the DTO
@@ -21,7 +23,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ResponseInterceptor());
   // Apply middleware globally
   // app.use(new MyLogger().use);
- // Apply the filter globally
+  // Apply the filter globally
   app.useGlobalFilters(new GlobalExceptionFilter());
 
   await app.listen(process.env.APP_RUNNING_PORT);

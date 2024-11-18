@@ -11,14 +11,17 @@ import {
   NotFoundException,
   Query,
   HttpException,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDTO, ResponseDto, UpdateProductDTO } from './dto/product.dto';
 import { Product } from './entities/product.entity';
 import { ProductQueryDto } from './dto/productQuery.dto';
 import { PaginatedResponse } from 'src/common/interfaces/PaginatedResponse.interface';
+import { JwtAuthGuard } from '../auth/strategies/AuthGuard';
 
 @Controller('products')
+@UseGuards(JwtAuthGuard)
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 

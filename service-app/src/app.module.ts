@@ -5,10 +5,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { join } from 'path';
 import { ProductsModule } from './modules/product/products.module';
-import { CustomTypeOrmLogger } from './common/middlewares/CustomTypeOrmLogger.middleware';
-import { APP_FILTER } from '@nestjs/core';
-import { GlobalExceptionFilter } from './common/filters/GlobalException.filter';
-
+import { PermissionsModule } from './modules/permission/permission.module';
+import { RolesModule } from './modules/role/role.module';
+import { UsersModule } from './modules/users/user.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { JwtAuthGuard } from './modules/auth/strategies/AuthGuard';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -26,12 +28,18 @@ import { GlobalExceptionFilter } from './common/filters/GlobalException.filter';
       autoLoadEntities: true,
       entities: [join(__dirname, '/**/*.entity{.ts,.js}')],
       // logging: ['query'],
-      // logging: true,
-      // logger: new CustomTypeOrmLogger(),
     }),
     ProductsModule,
+    PermissionsModule,
+    RolesModule,
+    UsersModule,
+    AuthModule,
+    JwtModule.register({
+      secret: 'yourSecretKey',  // Use an environment variable in production
+      signOptions: { expiresIn: '1h' },  // Set token expiration time
+    }),
   ],
   controllers: [AppController],
-  providers: [ AppService],
+  providers: [ AppService, JwtAuthGuard],
 })
 export class AppModule {}

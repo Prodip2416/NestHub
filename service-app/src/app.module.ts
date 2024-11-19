@@ -29,18 +29,20 @@ import { JwtModule } from '@nestjs/jwt';
       entities: [join(__dirname, '/**/*.entity{.ts,.js}')],
       // logging: ['query'],
     }),
-    ProductsModule,
     PermissionsModule,
     RolesModule,
     UsersModule,
     AuthModule,
     JwtModule.register({
-      secret: 'yourSecretKey',  // Use an environment variable in production
+      secret: process.env.JWT_SECRET_KEY, 
       signOptions: { expiresIn: '1h' }, 
-      global: true // Set token expiration time
+      global: true 
     }),
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [ AppService, JwtAuthGuard],
 })
 export class AppModule {}
+
+

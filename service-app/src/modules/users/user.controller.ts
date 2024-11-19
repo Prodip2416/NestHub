@@ -8,13 +8,17 @@ import {
     HttpStatus,
     HttpCode,
     NotFoundException,
+    UseGuards,
   } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/CreateUserDto.dto';
 import { UpdateUserDto } from './dto/UpdateUserDto.dto';
+import { JwtAuthGuard } from '../auth/strategies/AuthGuard';
+import { Public } from 'src/common/decorators/publicDecorator.decorator';
 
   
   @Controller('users')
+  @UseGuards(JwtAuthGuard)
   export class UserController {
     constructor(private readonly userService: UserService) {}
 
@@ -39,6 +43,7 @@ import { UpdateUserDto } from './dto/UpdateUserDto.dto';
     }
   
     @Post()
+    @Public()
     @HttpCode(HttpStatus.CREATED) 
     async create(@Body() createUserDto: CreateUserDto) {
       const createdProduct = await this.userService.create(createUserDto);

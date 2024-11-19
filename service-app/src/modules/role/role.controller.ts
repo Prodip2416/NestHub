@@ -9,12 +9,15 @@ import {
     HttpStatus,
     HttpCode,
     NotFoundException,
+    UseGuards,
   } from '@nestjs/common';
 import { RoleService } from './role.service';
 import { RoleDTO } from './dto/role.dto';
+import { JwtAuthGuard } from '../auth/strategies/AuthGuard';
 
   
   @Controller('roles')
+  @UseGuards(JwtAuthGuard)
   export class RoleController {
     constructor(private readonly roleService: RoleService) {}
 

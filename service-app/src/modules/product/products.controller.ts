@@ -19,6 +19,9 @@ import { Product } from './entities/product.entity';
 import { ProductQueryDto } from './dto/productQuery.dto';
 import { PaginatedResponse } from 'src/common/interfaces/PaginatedResponse.interface';
 import { JwtAuthGuard } from '../auth/strategies/AuthGuard';
+import { Roles } from 'src/common/decorators/rolesDecoratos.decorator';
+import { RolesEnum } from 'src/common/enum/RolesEnum.enum';
+import { Public } from 'src/common/decorators/publicDecorator.decorator';
 
 @Controller('products')
 @UseGuards(JwtAuthGuard)
@@ -37,7 +40,7 @@ export class ProductsController {
   }
 
   @Get()
-  
+  @Public()
   @HttpCode(HttpStatus.OK)
   async findAll(@Query() query: ProductQueryDto): Promise<PaginatedResponse<Product>> {
     const { data, total } = await this.productsService.findAll(query);
@@ -54,7 +57,6 @@ export class ProductsController {
   }
 
   @Get(':id')
- 
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id') id: number): Promise<ResponseDto<Product>> {
     const product = await this.productsService.findOne(id);
@@ -65,6 +67,7 @@ export class ProductsController {
   }
 
   @Post()
+  @Roles(RolesEnum.Admin) 
   @HttpCode(HttpStatus.CREATED) 
   async create(@Body() createProductDto: CreateProductDTO) {
     const createdProduct = await this.productsService.create(createProductDto);

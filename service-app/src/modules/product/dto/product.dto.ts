@@ -1,10 +1,12 @@
-import { IsString, IsOptional, IsNumber } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsNotEmpty } from 'class-validator';
 
 export class CreateProductDTO {
-  @IsString()
+  @IsString({ message: 'name must be a string' })
+  @IsNotEmpty({ message: 'name is missing' })
   name: string;
 
   @IsNumber()
+  @IsNotEmpty({ message: 'price is missing' })
   price: number;
 
   @IsOptional()
@@ -15,10 +17,12 @@ export class CreateProductDTO {
 export class UpdateProductDTO {
   @IsOptional()
   @IsString()
+  @IsNotEmpty({ message: 'name is missing' })
   name?: string;
 
   @IsOptional()
   @IsNumber()
+  @IsNotEmpty({ message: 'price is missing' })
   price?: number;
 
   @IsOptional()

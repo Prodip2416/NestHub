@@ -44,12 +44,17 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   }
 
   private getErrorMessage(message: any): string {
+    // console.log({message})
     if (typeof message === 'string') {
       return message;
+    }
+    if(Array.isArray(message?.errors)){
+      return message?.errors
     }
     if (typeof message === 'object' && message.message) {
       return Array.isArray(message.message) ? message.message.join(', ') : message.message;
     }
+    
     return 'Unexpected error occurred';
   }
 }

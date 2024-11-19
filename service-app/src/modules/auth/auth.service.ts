@@ -20,7 +20,7 @@ export class AuthService {
     const { email, password } = loginDto;
 
     // 1. Find the user by email
-    const user = await this.userRepository.findOne({ where: { email } });
+    const user = await this.userRepository.findOne({ where: { email }, relations: ['roles'],  });
 
     // 2. Check if user exists
     if (!user) {
@@ -41,33 +41,27 @@ export class AuthService {
       email: user.email,
       isActive: user.isActive,
       loginAt: new Date(),  // Adding login timestamp
+      userType: user?.roles.map((role)=>role?.name)
     };
 
     // 5. Generate JWT token
     const token = this.jwtService.sign(payload, {
-      expiresIn: '1h',  // Set token expiration (can be customized)
+      secret: process.env.JWT_SECRET_KEY,
+      expiresIn: '1h',                
     });
-
+    
     // 6. Return the token and user data
-    return { token, user };
+    return { token, user: { id: user.id, name: user.name, email: user.email, roles: user.roles } };
   }
 
   // A method to get the user from the token (for future requests)
   async getUserFromToken(token: string) {
     try {
-      const decoded = this.jwtService.verify(token['userToken']); // Verify and decode the token
+      const decoded = this.jwtService.verify(token['userToken'], { secret: process.env.JWT_SECRET_KEY });
       return decoded;  // Return decoded user info
     } catch (error) {
       throw new UnauthorizedException('Invalid or expired token');
     }
   }
 
-  validateToken(token: string): any {
-    try {
-      const user = this.jwtService.verify(token); // Decode and verify the token
-      return user; // Return user data from the token
-    } catch (error) {
-      throw new UnauthorizedException('Invalid or expired token');
-    }
-  }
 }
